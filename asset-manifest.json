@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/Typing/static/css/main.b4b5848b.css",
+    "main.js": "/Typing/static/js/main.c3c0a5b7.js",
+    "static/js/488.56aab5bf.chunk.js": "/Typing/static/js/488.56aab5bf.chunk.js",
+    "static/media/typing.jpg": "/Typing/static/media/typing.b965b1a7078583166ba6.jpg",
+    "index.html": "/Typing/index.html",
+    "main.b4b5848b.css.map": "/Typing/static/css/main.b4b5848b.css.map",
+    "main.c3c0a5b7.js.map": "/Typing/static/js/main.c3c0a5b7.js.map",
+    "488.56aab5bf.chunk.js.map": "/Typing/static/js/488.56aab5bf.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b4b5848b.css",
+    "static/js/main.c3c0a5b7.js"
+  ]
+}
