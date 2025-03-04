@@ -1,0 +1,159 @@
+ /* Global Styles */
+ * { box-sizing: border-box; }
+ body {
+   margin: 0;
+   padding: 20px;
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+   background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   min-height: 100vh;
+ }
+
+ /* Container Styles */
+ .typing-game-container {
+     
+   background: #ffffff;
+   padding: 30px;
+   max-width: 600px;
+   width: 100%;
+   border-radius: 10px;
+   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+   animation: fadeIn 1s ease-out;
+ }
+
+ /* Title Styles */
+ .game-title {
+     margin-left: 40px;
+text-align: center;
+font-size: 2rem;
+margin-bottom: 30px;
+color: #2d3748;
+position: relative;
+display: inline-block; /* Makes the width only as wide as the text */
+}
+
+.game-title::after {
+ margin-top: 6px;
+content: "";
+display: block;
+width: 30%;  /* Adjust this value to set how long the underline is */
+height: 6px;
+background-image: linear-gradient(135deg,rgb(245, 245, 6),red);
+border-radius: 10px;
+/* Adjust spacing as needed */
+}
+
+ 
+
+ /* Theme Selector */
+ .theme-selector {
+    
+   margin: 15px 0;
+ }
+ select {
+     margin-top: 20px;
+   width: 100%;
+   padding: 10px;
+   font-size: 1rem;
+   border: 2px solid #cbd5e0;
+   border-radius: 5px;
+   transition: border 0.3s ease;
+ }
+ select:focus {
+   outline: none;
+   border-color: #63b3ed;
+ }
+
+ /* Text Display */
+ .text-display {
+    
+   font-size: 1.1rem;
+   background: #edf2f7;
+   padding: 20px;
+   border-radius: 8px;
+   min-height: 80px;
+   white-space: pre-wrap;
+   margin-bottom: 15px;
+   animation: slideIn 0.7s ease-out;
+ }
+
+ /* Typing Input */
+ .typing-input {
+   height: 100px;
+   width: 100%;
+   resize: none;
+   padding: 10px;
+   font-size: 1rem;
+   border: 2px solid #cbd5e0;
+   border-radius: 5px;
+   transition: border 0.3s ease;
+ }
+ .typing-input:focus {
+   outline: none;
+   border-color: #63b3ed;
+ }
+
+ /* Results Section */
+ .results {
+   margin-top: 15px;
+   font-size: 1rem;
+   color: #2d3748;
+ }
+
+ .results p {
+   margin: 5px 0;
+ }
+ #timer {
+   text-align: center;
+   font-size: 1.2rem;
+   margin-top: 10px;
+   color: #4a5568;
+ }
+
+ /* Submit Button */
+ button {
+   width: 100%;
+   padding: 12px;
+   font-size: 1rem;
+   color: #fff;
+   background: #3182ce;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+   transition: background 0.3s ease, transform 0.2s ease;
+   margin-top: 15px;
+ }
+ button:hover {
+   background: #2b6cb0;
+   transform: translateY(-2px);
+ }
+ button:active {
+   transform: translateY(0);
+ }
+
+ /* Animations */
+ @keyframes fadeIn {
+   from { opacity: 0; transform: scale(0.95); }
+   to { opacity: 1; transform: scale(1); }
+ }
+ @keyframes slideIn {
+   from { opacity: 0; transform: translateY(-15px); }
+   to { opacity: 1; transform: translateY(0); }
+ }
+
+ @media (max-width: 480px) {
+   body { padding: 10px; }
+   select, button, textarea { font-size: 0.9rem; }
+   .game-title { 
+     font-size: 1.2rem; 
+    margin-left: -20px;
+  
+ }
+ .game-title::after{
+     margin-top: 6px;
+     height: 5px;
+     width: 40%;
+ }
+ }
