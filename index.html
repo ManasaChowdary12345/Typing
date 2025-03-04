@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactive Typing Game</title>
+  <style>
+    /* Global Styles */
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Container Styles */
+    .typing-game-container {
+        
+      background: #ffffff;
+      padding: 30px;
+      max-width: 600px;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      animation: fadeIn 1s ease-out;
+    }
+
+    /* Title Styles */
+    .game-title {
+        margin-left: 40px;
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 30px;
+  color: #2d3748;
+  position: relative;
+  display: inline-block; /* Makes the width only as wide as the text */
+}
+
+.game-title::after {
+    margin-top: 6px;
+  content: "";
+  display: block;
+  width: 30%;  /* Adjust this value to set how long the underline is */
+  height: 6px;
+  background-image: linear-gradient(135deg,rgb(245, 245, 6),red);
+  border-radius: 10px;
+  /* Adjust spacing as needed */
+}
+
+    
+
+    /* Theme Selector */
+    .theme-selector {
+       
+      margin: 15px 0;
+    }
+    select {
+        margin-top: 20px;
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: 2px solid #cbd5e0;
+      border-radius: 5px;
+      transition: border 0.3s ease;
+    }
+    select:focus {
+      outline: none;
+      border-color: #63b3ed;
+    }
+
+    /* Text Display */
+    .text-display {
+       
+      font-size: 1.1rem;
+      background: #edf2f7;
+      padding: 20px;
+      border-radius: 8px;
+      min-height: 80px;
+      white-space: pre-wrap;
+      margin-bottom: 15px;
+      animation: slideIn 0.7s ease-out;
+    }
+
+    /* Typing Input */
+    .typing-input {
+      height: 100px;
+      width: 100%;
+      resize: none;
+      padding: 10px;
+      font-size: 1rem;
+      border: 2px solid #cbd5e0;
+      border-radius: 5px;
+      transition: border 0.3s ease;
+    }
+    .typing-input:focus {
+      outline: none;
+      border-color: #63b3ed;
+    }
+
+    /* Results Section */
+    .results {
+      margin-top: 15px;
+      font-size: 1rem;
+      color: #2d3748;
+    }
+   
+    .results p {
+      margin: 5px 0;
+    }
+    #timer {
+      text-align: center;
+      font-size: 1.2rem;
+      margin-top: 10px;
+      color: #4a5568;
+    }
+
+    /* Submit Button */
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      color: #fff;
+      background: #3182ce;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+      margin-top: 15px;
+    }
+    button:hover {
+      background: #2b6cb0;
+      transform: translateY(-2px);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 10px; }
+      select, button, textarea { font-size: 0.9rem; }
+      .game-title { 
+        font-size: 1.2rem; 
+       margin-left: -20px;
+     
+    }
+    .game-title::after{
+        margin-top: 6px;
+        height: 5px;
+        width: 40%;
+    }
+    }
+  </style>
+</head>
+<body>
+  <div class="typing-game-container">
+    <h1 class="game-title">Interactive Typing Game</h1>
+
+    <div class="theme-selector">
+      <label class="th" for="theme-select">Select Theme: </label>
+      <select id="theme-select">
+        <option value="coding">Coding</option>
+        <option value="literature">Literature</option>
+        <option value="quotes">Quotes</option>
+        <option value="science">Science</option>
+      </select>
+    </div>
+
+    <div class="text-display" id="text-display"></div>
+
+    <textarea class="typing-input" id="typing-input" placeholder="Start typing here..."></textarea>
+
+    <div class="results">
+      <p><strong>Accuracy:</strong> <span id="accuracy">0</span>%</p>
+      <p><strong>Words Per Minute (WPM):</strong> <span id="wpm">0</span></p>
+      <p><strong>Time Taken:</strong> <span id="timeTaken">0</span> seconds</p>
+      <p><strong>Feedback:</strong> <span id="feedback"></span></p>
+      <p id="timer"></p>
+    </div>
+
+    <button id="submit-button">Submit</button>
+  </div>
+
+  <script>
+    // Sample texts for different themes
+    const sampleTexts = {
+      coding: [
+        "const hello = 'world';",
+        "function greet(name) { return `Hello, ${name}`; }",
+        "for (let i = 0; i < 10; i++) { console.log(i); }",
+        "let x = 5; let y = 10; let sum = x + y;",
+        "if (a > b) { console.log('a is greater'); } else { console.log('b is greater'); }",
+        "const array = [1, 2, 3, 4, 5]; array.map(n => n * 2);",
+        "const person = { name: 'John', age: 30, city: 'New York' };",
+        "async function fetchData() { let response = await fetch('/data'); }",
+        "const factorial = n => n <= 1 ? 1 : n * factorial(n - 1);",
+        "const isEven = num => num % 2 === 0 ? 'Even' : 'Odd';"
+      ],
+      literature: [
+        "It was the best of times, it was the worst of times.",
+        "To be or not to be, that is the question.",
+        "All that glitters is not gold.",
+        "The quick brown fox jumps over the lazy dog.",
+        "A tale of two cities is a story of contrasts.",
+        "The only thing we have to fear is fear itself.",
+        "The future belongs to those who believe in the beauty of their dreams.",
+        "Do not go gentle into that good night, Old age should burn and rave at close of day.",
+        "In the end, we will remember not the words of our enemies, but the silence of our friends.",
+        "The great Gatsby is a tragedy about the American dream."
+      ],
+      quotes: [
+        "The only limit to our realization of tomorrow is our doubts of today.",
+        "In the middle of every difficulty lies opportunity.",
+        "Success is not final, failure is not fatal: It is the courage to continue that counts.",
+        "You must be the change you wish to see in the world.",
+        "Don’t watch the clock; do what it does. Keep going.",
+        "Life is 10% what happens to us and 90% how we react to it.",
+        "The best way to predict your future is to create it.",
+        "Believe in yourself and all that you are. Know that there is something inside you that is greater than any obstacle.",
+        "Everything you can imagine is real.",
+        "Success usually comes to those who are too busy to be looking for it."
+      ],
+      science: [
+        "The Earth revolves around the Sun in an elliptical orbit.",
+        "Every action has an equal and opposite reaction.",
+        "Water is composed of two hydrogen atoms and one oxygen atom.",
+        "The speed of light in a vacuum is approximately 299,792 kilometers per second.",
+        "DNA is the hereditary material in humans and almost all other organisms.",
+        "Gravity is a force that attracts objects toward the center of the Earth.",
+        "Newton's first law of motion states that an object will remain at rest or in uniform motion unless acted upon by a force.",
+        "The human brain contains around 86 billion neurons.",
+        "The theory of relativity revolutionized the way we think about space and time.",
+        "In quantum mechanics, particles can exist in multiple states at once, a phenomenon known as superposition."
+      ]
+    };
+
+    // State variables
+    let theme = "coding";
+    let currentText = "";
+    let inputText = "";
+    let startTime = null;
+    let timerInterval = null;
+    let isCompleted = false;
+    let isTimerRunning = false;
+
+    // DOM Elements
+    const themeSelect = document.getElementById("theme-select");
+    const textDisplay = document.getElementById("text-display");
+    const typingInput = document.getElementById("typing-input");
+    const submitButton = document.getElementById("submit-button");
+    const accuracySpan = document.getElementById("accuracy");
+    const wpmSpan = document.getElementById("wpm");
+    const timeTakenSpan = document.getElementById("timeTaken");
+    const feedbackSpan = document.getElementById("feedback");
+    const timerDisplay = document.getElementById("timer");
+
+    // Initialize new text on theme change or page load
+    function setNewText() {
+      const texts = sampleTexts[theme];
+      currentText = texts[Math.floor(Math.random() * texts.length)];
+      textDisplay.textContent = currentText;
+      typingInput.value = "";
+      inputText = "";
+      startTime = null;
+      accuracySpan.textContent = "0";
+      wpmSpan.textContent = "0";
+      timeTakenSpan.textContent = "0";
+      feedbackSpan.textContent = "";
+      isCompleted = false;
+      isTimerRunning = false;
+      timerDisplay.textContent = "";
+    }
+
+    // Update timer display
+    function updateTimer() {
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      timerDisplay.textContent = `Time: ${elapsed} sec`;
+    }
+
+    // Update accuracy based on entire sample text
+    function updateAccuracy() {
+      const total = currentText.length;
+      let correctChars = 0;
+      for (let i = 0; i < total; i++) {
+        if (inputText[i] === currentText[i]) {
+          correctChars++;
+        }
+      }
+      const accuracyValue = total ? ((correctChars / total) * 100).toFixed(2) : 0;
+      accuracySpan.textContent = accuracyValue;
+    }
+
+    // Event: Theme change
+    themeSelect.addEventListener("change", function () {
+      theme = this.value;
+      setNewText();
+    });
+
+    // Event: Input change
+    typingInput.addEventListener("input", function (e) {
+      inputText = e.target.value;
+      if (!startTime) {
+        startTime = Date.now();
+        isTimerRunning = true;
+        timerInterval = setInterval(updateTimer, 1000);
+      }
+      updateAccuracy();
+    });
+
+    // Event: Submit button click
+    submitButton.addEventListener("click", function () {
+      if (!startTime) return;
+      const endTime = Date.now();
+      const timeInSeconds = ((endTime - startTime) / 1000).toFixed(2);
+
+      const total = currentText.length;
+      let correctChars = 0;
+      for (let i = 0; i < total; i++) {
+        if (inputText[i] === currentText[i]) {
+          correctChars++;
+        }
+      }
+      const accuracyValue = total ? ((correctChars / total) * 100).toFixed(2) : 0;
+      
+      const wordsCount = currentText.split(' ').length;
+      const timeInMinutes = (endTime - startTime) / 1000 / 60;
+      const wpmValue = timeInMinutes > 0 ? (wordsCount / timeInMinutes).toFixed(2) : 0;
+
+      accuracySpan.textContent = accuracyValue;
+      wpmSpan.textContent = wpmValue;
+      timeTakenSpan.textContent = timeInSeconds;
+
+      let emoji = "";
+      let message = "";
+      if (inputText.trim() === currentText.trim()) {
+        if (accuracyValue >= 90 && wpmValue >= 10) {
+          emoji = "🌟";
+          message = "Excellent! You’re a pro!";
+        } else if (accuracyValue >= 80 && accuracyValue < 90 && wpmValue > 10) {
+          emoji = "😊";
+          message = "Great job! Keep practicing!";
+        } else if (accuracyValue >= 60 && accuracyValue < 80 && wpmValue > 10) {
+          emoji = "😐";
+          message = "Good effort, but there’s room for improvement!";
+        } else {
+          emoji = "😟";
+          message = "Don’t worry, keep practicing and you’ll get better!";
+        }
+      } else {
+        emoji = "😕";
+        message = "Oops! You missed some parts. Try again!";
+      }
+      feedbackSpan.textContent = `${emoji} ${message}`;
+      isCompleted = true;
+      isTimerRunning = false;
+      clearInterval(timerInterval);
+      startTime = null;
+
+      setTimeout(function () {
+        alert("Thank you for choosing us!");
+        setNewText();
+      }, 4000);
+    });
+
+    setNewText();
+  </script>
+</body>
+</html>
